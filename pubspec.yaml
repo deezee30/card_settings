@@ -1,8 +1,10 @@
 name: card_settings
 description: A flutter package for building card based settings forms. This includes a library of pre-built form field widgets.
-version: 3.3.0 
-homepage: https://github.com/codegrue/card_settings
-issue_tracker: https://github.com/codegrue/card_settings/issues
+version: 4.0.0
+homepage: https://github.com/deezee30/card_settings
+issue_tracker: https://github.com/deezee30/card_settings/issues
+
+publish_to: 'none'
 
 dependencies:
   flutter:
@@ -10,12 +12,12 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   intl: ^0.17.0
-  meta: ^1.7.0
+  meta: ^1.8.0
   extended_masked_text: ^2.3.1
   flutter_cupertino_settings: ^0.5.0 # show apple style dialogs
   flutter_material_pickers: ^3.3.0 # show android style dialogs
   pattern_formatter: ^2.0.0 # used for localized doubles
-  flutter_multi_formatter: ^2.8.4  # used for localized phone numbers
+  flutter_multi_formatter: ^2.9.10  # used for localized phone numbers
 
 dev_dependencies:
   flutter_test:
@@ -24,7 +26,7 @@ dev_dependencies:
   mockito: ^5.3.2
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 flutter:
   uses-material-design: true

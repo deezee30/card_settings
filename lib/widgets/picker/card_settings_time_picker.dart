@@ -1,13 +1,14 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This field allows a time to be selected.
 class CardSettingsTimePicker extends FormField<TimeOfDay>
@@ -100,15 +101,17 @@ class _CardSettingsTimePickerState extends FormFieldState<TimeOfDay> {
   void _showDialog() {
     if (showCupertino(context, widget.showMaterialonIOS)) {
       _showCupertinoPopUpTimePicker();
-    } else
+    } else {
       _showMaterialPopUpTimePicker();
+    }
   }
 
   Widget _build(BuildContext context) {
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsTimePicker();
-    else
+    } else {
       return _materialSettingsTimePicker();
+    }
   }
 
   Widget _buildBottomPicker(Widget picker) {
@@ -146,17 +149,19 @@ class _CardSettingsTimePickerState extends FormFieldState<TimeOfDay> {
                     DateTime.now().day, value!.hour, value!.minute),
             onDateTimeChanged: (DateTime newDateTime) {
               didChange(TimeOfDay.fromDateTime(newDateTime));
-              if (widget.onChanged != null)
+              if (widget.onChanged != null) {
                 widget.onChanged!(TimeOfDay.fromDateTime(newDateTime));
+              }
             },
           ),
         );
       },
-    ).then((_value) {
-      if (_value != null) {
-        didChange(TimeOfDay.fromDateTime(_value));
-        if (widget.onChanged != null)
-          widget.onChanged!(TimeOfDay.fromDateTime(_value));
+    ).then((value) {
+      if (value != null) {
+        didChange(TimeOfDay.fromDateTime(value));
+        if (widget.onChanged != null) {
+          widget.onChanged!(TimeOfDay.fromDateTime(value));
+        }
       }
     });
   }
@@ -165,10 +170,10 @@ class _CardSettingsTimePickerState extends FormFieldState<TimeOfDay> {
     showTimePicker(
       context: context,
       initialTime: value!,
-    ).then((_value) {
-      if (_value != null) {
-        didChange(_value);
-        if (widget.onChanged != null) widget.onChanged!(_value);
+    ).then((value) {
+      if (value != null) {
+        didChange(value);
+        if (widget.onChanged != null) widget.onChanged!(value);
       }
     });
   }
@@ -183,13 +188,13 @@ class _CardSettingsTimePickerState extends FormFieldState<TimeOfDay> {
                 if (widget.enabled) _showDialog();
               },
               child: CSControl(
-                nameWidget: Container(
+                nameWidget: SizedBox(
                   width: widget.labelWidth ??
                       CardSettings.of(context)?.labelWidth ??
                       120.0,
                   child: widget.requiredIndicator != null
                       ? Text(
-                          (widget.label) + ' *',
+                          '${widget.label} *',
                           style: ls,
                         )
                       : Text(
@@ -220,7 +225,7 @@ class _CardSettingsTimePickerState extends FormFieldState<TimeOfDay> {
         labelWidth: widget.labelWidth,
         enabled: widget.enabled,
         visible: widget.visible,
-        icon: widget.icon ?? Icon(Icons.event),
+        icon: widget.icon ?? const Icon(Icons.event),
         requiredIndicator: widget.requiredIndicator,
         errorText: errorText,
         fieldPadding: widget.fieldPadding,

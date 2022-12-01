@@ -1,3 +1,7 @@
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
+
 import 'dart:math' as math;
 import 'package:flutter/services.dart';
 
@@ -19,12 +23,12 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     if (decimalDigits != null) {
       String value = newValue.text;
 
-      if (value.contains(".") &&
-          value.substring(value.indexOf(".") + 1).length > decimalDigits!) {
+      if (value.contains('.') &&
+          value.substring(value.indexOf('.') + 1).length > decimalDigits!) {
         truncated = oldValue.text;
         newSelection = oldValue.selection;
-      } else if (value == ".") {
-        truncated = "0.";
+      } else if (value == '.') {
+        truncated = '0.';
 
         newSelection = newValue.selection.copyWith(
           baseOffset: math.min(truncated.length, truncated.length + 1),

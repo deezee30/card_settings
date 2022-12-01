@@ -1,17 +1,18 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
 import 'package:flutter/material.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a list picker that allows for a range of numbers to be speficied as pptions.
 class CardSettingsNumberPicker extends StatelessWidget
     implements ICommonFieldProperties {
-  CardSettingsNumberPicker({
-    Key? key,
-    this.label: 'Label',
+  const CardSettingsNumberPicker({
+    super.key,
+    this.label = 'Label',
     this.labelAlign,
     this.labelWidth,
     this.initialValue,
@@ -21,13 +22,13 @@ class CardSettingsNumberPicker extends StatelessWidget
     this.requiredIndicator,
     required this.min,
     required this.max,
-    this.stepInterval: 1,
-    this.autovalidateMode: AutovalidateMode.onUserInteraction,
-    this.enabled: true,
+    this.stepInterval = 1,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
+    this.enabled = true,
     this.validator,
     this.onSaved,
     this.onChanged,
-    this.visible: true,
+    this.visible = true,
     this.showMaterialonIOS,
     this.fieldPadding,
   }) : assert(min < max);
@@ -106,7 +107,7 @@ class CardSettingsNumberPicker extends StatelessWidget
   Widget build(BuildContext context) {
     return CardSettingsListPicker<int>(
       key: key,
-      label: this.label,
+      label: label,
       showMaterialonIOS: showMaterialonIOS,
       fieldPadding: fieldPadding,
       labelAlign: labelAlign,

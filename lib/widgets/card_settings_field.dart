@@ -1,19 +1,21 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
 
-import '../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
-const unimplemented = "implement in the wrapper widget";
+const unimplemented = 'implement in the wrapper widget';
 
 /// This is the basic layout of a field in a CardSettings view. Typcially, it
 /// will not be used directly.
 class CardSettingsField extends StatelessWidget
     implements ICommonFieldProperties {
-  CardSettingsField({
-    this.label: 'Label',
+  const CardSettingsField({
+    super.key,
+    this.label = 'Label',
     required this.content,
     this.icon,
     this.pickerIcon,
@@ -21,7 +23,7 @@ class CardSettingsField extends StatelessWidget
     this.contentOnNewLine = false,
     this.unitLabel,
     this.errorText,
-    this.visible: true,
+    this.visible = true,
     required this.labelAlign,
     required this.requiredIndicator,
     this.enabled = true,
@@ -89,13 +91,13 @@ class CardSettingsField extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsetsGeometry _fieldPadding = (fieldPadding ??
+    EdgeInsetsGeometry fieldPadding_ = (fieldPadding ??
         CardSettings.of(context)?.fieldPadding ??
-        EdgeInsets.only(left: 14.0, top: 8.0, right: 14.0, bottom: 8.0));
+        const EdgeInsets.only(left: 14.0, top: 8.0, right: 14.0, bottom: 8.0));
 
     if (visible) {
       return Container(
-        padding: _fieldPadding,
+        padding: fieldPadding_,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -125,7 +127,7 @@ class CardSettingsField extends StatelessWidget
   Widget _buildNewRowContent(BuildContext context) {
     if (contentOnNewLine) {
       return Container(
-        padding: EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsets.only(top: 10.0),
         child: _buildDecoratedContent(context),
       );
     } else {
@@ -143,7 +145,7 @@ class CardSettingsField extends StatelessWidget
           .applyDefaults(Theme.of(context).inputDecorationTheme)
           .copyWith(
               errorText: errorText,
-              contentPadding: EdgeInsets.all(0.0),
+              contentPadding: const EdgeInsets.all(0.0),
               isDense: true,
               border: InputBorder.none);
 
@@ -233,15 +235,16 @@ class CardSettingsField extends StatelessWidget
   }
 
   TextStyle _buildLabelStyle(BuildContext context) {
-    TextStyle labelStyle = TextStyle(
+    TextStyle labelStyle = const TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 16.0,
     );
 
     labelStyle =
         labelStyle.merge(Theme.of(context).inputDecorationTheme.labelStyle);
-    if (!enabled)
+    if (!enabled) {
       labelStyle = labelStyle.copyWith(color: Theme.of(context).disabledColor);
+    }
 
     return labelStyle;
   }
@@ -252,8 +255,8 @@ class CardSettingsField extends StatelessWidget
     return (icon == null)
         ? Container()
         : Container(
-            margin: EdgeInsets.all(0.0),
-            padding: EdgeInsets.only(right: 4.0),
+            margin: const EdgeInsets.all(0.0),
+            padding: const EdgeInsets.only(right: 4.0),
             child: Icon(
               icon?.icon,
               color: (icon?.color != null)
@@ -268,13 +271,13 @@ class CardSettingsField extends StatelessWidget
   Widget _buildRightDecoration() {
     return (pickerIcon != null || unitLabel != null)
         ? Container(
-            padding: EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 10),
             alignment: Alignment.centerRight,
             child: (pickerIcon != null)
                 ? Icon(pickerIcon, size: 20)
                 : Text(
                     unitLabel ?? '',
-                    style: TextStyle(fontStyle: FontStyle.italic),
+                    style: const TextStyle(fontStyle: FontStyle.italic),
                   ),
           )
         : Container();

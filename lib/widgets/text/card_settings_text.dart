@@ -1,16 +1,17 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:extended_masked_text/extended_masked_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
-import 'package:flutter/cupertino.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
-import '../../interfaces/text_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
+import 'package:card_settings/interfaces/text_field_properties.dart';
 
 /// This is a standard one line text entry  It's based on the [TextFormField] widget.
 class CardSettingsText extends FormField<String>
@@ -18,8 +19,8 @@ class CardSettingsText extends FormField<String>
   CardSettingsText({
     Key? key,
     String? initialValue,
-    bool autovalidate: false,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    bool autovalidate = false,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     this.enabled = true,
     this.onSaved,
     this.validator,
@@ -27,7 +28,7 @@ class CardSettingsText extends FormField<String>
     this.controller,
     this.textCapitalization = TextCapitalization.none,
     this.keyboardType = TextInputType.text,
-    this.maxLengthEnforcement: MaxLengthEnforcement.enforced,
+    this.maxLengthEnforcement = MaxLengthEnforcement.enforced,
     this.inputMask,
     this.inputFormatters,
     this.onFieldSubmitted,
@@ -237,22 +238,24 @@ class _CardSettingsTextState extends FormFieldState<String> {
   }
 
   void _onFieldSubmitted(String value) {
-    if (this.widget.focusNode != null) this.widget.focusNode!.unfocus();
+    if (widget.focusNode != null) widget.focusNode!.unfocus();
 
-    if (this.widget.inputActionNode != null) {
-      this.widget.inputActionNode!.requestFocus();
+    if (widget.inputActionNode != null) {
+      widget.inputActionNode!.requestFocus();
       return;
     }
 
-    if (this.widget.onFieldSubmitted != null)
-      this.widget.onFieldSubmitted!(value);
+    if (widget.onFieldSubmitted != null) {
+      widget.onFieldSubmitted!(value);
+    }
   }
 
   Widget _build(BuildContext context) {
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _buildCupertinoTextbox(context);
-    else
+    } else {
       return _buildMaterialTextbox(context);
+    }
   }
 
   Container _buildCupertinoTextbox(BuildContext context) {
@@ -263,80 +266,78 @@ class _CardSettingsTextState extends FormFieldState<String> {
     }
 
     final ls = labelStyle(context, widget.enabled);
-    final _child = Container(
-      child: CupertinoTextField(
-        prefix: widget.prefixText == null
-            ? null
-            : Text(
-                widget.prefixText ?? '',
-                style: ls,
+    final child = CupertinoTextField(
+      prefix: widget.prefixText == null
+          ? null
+          : Text(
+              widget.prefixText ?? '',
+              style: ls,
+            ),
+      suffix: widget.unitLabel == null
+          ? null
+          : Text(
+              widget.unitLabel ?? '',
+              style: ls,
+            ),
+      controller: _controller,
+      focusNode: widget.focusNode,
+      textInputAction: widget.inputAction,
+      keyboardType: widget.keyboardType,
+      textCapitalization: widget.textCapitalization,
+      style: contentStyle(context, value, widget.enabled),
+      decoration: hasError
+          ? BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(4.0),
               ),
-        suffix: widget.unitLabel == null
-            ? null
-            : Text(
-                widget.unitLabel ?? '',
-                style: ls,
-              ),
-        controller: _controller,
-        focusNode: widget.focusNode,
-        textInputAction: widget.inputAction,
-        keyboardType: widget.keyboardType,
-        textCapitalization: widget.textCapitalization,
-        style: contentStyle(context, value, widget.enabled),
-        decoration: hasError
-            ? BoxDecoration(
-                border: Border.all(color: Colors.red),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4.0),
+            )
+          : const BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: CupertinoColors.lightBackgroundGray,
+                  style: BorderStyle.solid,
+                  width: 0.0,
                 ),
-              )
-            : BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: CupertinoColors.lightBackgroundGray,
-                    style: BorderStyle.solid,
-                    width: 0.0,
-                  ),
-                  bottom: BorderSide(
-                    color: CupertinoColors.lightBackgroundGray,
-                    style: BorderStyle.solid,
-                    width: 0.0,
-                  ),
-                  left: BorderSide(
-                    color: CupertinoColors.lightBackgroundGray,
-                    style: BorderStyle.solid,
-                    width: 0.0,
-                  ),
-                  right: BorderSide(
-                    color: CupertinoColors.lightBackgroundGray,
-                    style: BorderStyle.solid,
-                    width: 0.0,
-                  ),
+                bottom: BorderSide(
+                  color: CupertinoColors.lightBackgroundGray,
+                  style: BorderStyle.solid,
+                  width: 0.0,
                 ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4.0),
+                left: BorderSide(
+                  color: CupertinoColors.lightBackgroundGray,
+                  style: BorderStyle.solid,
+                  width: 0.0,
+                ),
+                right: BorderSide(
+                  color: CupertinoColors.lightBackgroundGray,
+                  style: BorderStyle.solid,
+                  width: 0.0,
                 ),
               ),
-        clearButtonMode: widget.showClearButtonIOS,
-        placeholder: widget.hintText,
-        textAlign: widget.contentAlign ?? TextAlign.end,
-        autofocus: widget.autofocus,
-        obscureText: widget.obscureText,
-        autocorrect: widget.autocorrect,
-        maxLengthEnforcement: widget.maxLengthEnforcement,
-        maxLines: widget.numberOfLines,
-        maxLength: (widget.showCounter)
-            ? widget.maxLength
-            : null, // if we want counter use default behavior
-        onChanged: _handleOnChanged,
-        onSubmitted: _onFieldSubmitted,
-        inputFormatters: widget.inputFormatters ??
-            [
-              // if we don't want the counter, use this maxLength instead
-              LengthLimitingTextInputFormatter(widget.maxLength)
-            ],
-        enabled: widget.enabled,
-      ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(4.0),
+              ),
+            ),
+      clearButtonMode: widget.showClearButtonIOS,
+      placeholder: widget.hintText,
+      textAlign: widget.contentAlign ?? TextAlign.end,
+      autofocus: widget.autofocus,
+      obscureText: widget.obscureText,
+      autocorrect: widget.autocorrect,
+      maxLengthEnforcement: widget.maxLengthEnforcement,
+      maxLines: widget.numberOfLines,
+      maxLength: (widget.showCounter)
+          ? widget.maxLength
+          : null, // if we want counter use default behavior
+      onChanged: _handleOnChanged,
+      onSubmitted: _onFieldSubmitted,
+      inputFormatters: widget.inputFormatters ??
+          [
+            // if we don't want the counter, use this maxLength instead
+            LengthLimitingTextInputFormatter(widget.maxLength)
+          ],
+      enabled: widget.enabled,
     );
     return Container(
       child: widget.visible == false
@@ -348,7 +349,7 @@ class _CardSettingsTextState extends FormFieldState<String> {
                     CSControl(
                       nameWidget: widget.requiredIndicator != null
                           ? Text(
-                              (widget.label) + ' *',
+                              '${widget.label} *',
                               style: ls,
                             )
                           : Text(widget.label, style: ls),
@@ -356,14 +357,15 @@ class _CardSettingsTextState extends FormFieldState<String> {
                       style: CSWidgetStyle(icon: widget.icon),
                     ),
                     Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: _child,
+                      padding: const EdgeInsets.all(5.0),
                       color: Theme.of(context).brightness == Brightness.dark
                           ? null
                           : CupertinoColors.white,
+                      child: child,
                     ),
                     Container(
-                      padding: widget.showCounter ? EdgeInsets.all(5.0) : null,
+                      padding:
+                          widget.showCounter ? const EdgeInsets.all(5.0) : null,
                       color: Theme.of(context).brightness == Brightness.dark
                           ? null
                           : CupertinoColors.white,
@@ -372,8 +374,8 @@ class _CardSettingsTextState extends FormFieldState<String> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Text(
-                                  "${_controller?.text.length ?? 0}/${widget.maxLength}",
-                                  style: TextStyle(
+                                  '${_controller?.text.length ?? 0}/${widget.maxLength}',
+                                  style: const TextStyle(
                                     color: CupertinoColors.inactiveGray,
                                   ),
                                 ),
@@ -387,24 +389,25 @@ class _CardSettingsTextState extends FormFieldState<String> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     CSControl(
-                      nameWidget: Container(
+                      nameWidget: SizedBox(
                         width: widget.labelWidth ??
                             CardSettings.of(context)?.labelWidth ??
                             120.0,
                         child: widget.requiredIndicator != null
-                            ? Text((widget.label) + ' *', style: ls)
+                            ? Text('${widget.label} *', style: ls)
                             : Text(widget.label, style: ls),
                       ),
                       contentWidget: Expanded(
                         child: Container(
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: _child,
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: child,
                         ),
                       ),
                       style: CSWidgetStyle(icon: widget.icon),
                     ),
                     Container(
-                      padding: widget.showCounter ? EdgeInsets.all(5.0) : null,
+                      padding:
+                          widget.showCounter ? const EdgeInsets.all(5.0) : null,
                       color: Theme.of(context).brightness == Brightness.dark
                           ? null
                           : CupertinoColors.white,
@@ -413,8 +416,8 @@ class _CardSettingsTextState extends FormFieldState<String> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Text(
-                                  "${_controller?.text.length ?? 0}/${widget.maxLength}",
-                                  style: TextStyle(
+                                  '${_controller?.text.length ?? 0}/${widget.maxLength}',
+                                  style: const TextStyle(
                                     color: CupertinoColors.inactiveGray,
                                   ),
                                 ),

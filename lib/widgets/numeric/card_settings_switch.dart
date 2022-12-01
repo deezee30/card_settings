@@ -1,13 +1,14 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a field that allows a boolean to be set via a switch widget.
 class CardSettingsSwitch extends FormField<bool>
@@ -20,8 +21,8 @@ class CardSettingsSwitch extends FormField<bool>
     FormFieldValidator<bool>? validator,
     bool initialValue = false,
     this.enabled = true,
-    this.trueLabel = "Yes",
-    this.falseLabel = "No",
+    this.trueLabel = 'Yes',
+    this.falseLabel = 'No',
     this.visible = true,
     this.label = 'Label',
     this.labelWidth,
@@ -101,8 +102,9 @@ class _CardSettingsSwitchState extends FormFieldState<bool> {
   CardSettingsSwitch get widget => super.widget as CardSettingsSwitch;
 
   Widget _build(BuildContext context) {
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsSwitch();
+    }
     return _materialSettingsSwitch();
   }
 
@@ -127,7 +129,7 @@ class _CardSettingsSwitchState extends FormFieldState<bool> {
           ),
         ),
         Container(
-          padding: EdgeInsets.all(0.0),
+          padding: const EdgeInsets.all(0.0),
           height: 20.0,
           child: Switch(
             value: value!,
@@ -149,13 +151,13 @@ class _CardSettingsSwitchState extends FormFieldState<bool> {
       child: widget.visible == false
           ? null
           : CSControl(
-              nameWidget: Container(
+              nameWidget: SizedBox(
                 width: widget.labelWidth ??
                     CardSettings.of(context)?.labelWidth ??
                     120.0,
                 child: widget.requiredIndicator != null
                     ? Text(
-                        (widget.label) + ' *',
+                        '${widget.label} *',
                         style: ls,
                       )
                     : Text(

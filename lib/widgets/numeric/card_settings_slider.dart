@@ -1,21 +1,22 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a field that allows a boolean to be set via a switch widget.
 class CardSettingsSlider extends FormField<double>
     implements ICommonFieldProperties {
   CardSettingsSlider({
     Key? key,
-    bool autovalidate: false,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    bool autovalidate = false,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     FormFieldSetter<double>? onSaved,
     FormFieldValidator<double>? validator,
     double initialValue = 0.0,
@@ -110,10 +111,11 @@ class _CardSettingsSliderState extends FormFieldState<double> {
   CardSettingsSlider get widget => super.widget as CardSettingsSlider;
 
   Widget _build(BuildContext context) {
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsSlider();
-    else
+    } else {
       return _materialSettingsSlider();
+    }
   }
 
   Widget _cupertinoSettingsSlider() {
@@ -122,13 +124,13 @@ class _CardSettingsSliderState extends FormFieldState<double> {
       child: widget.visible == false
           ? null
           : CSControl(
-              nameWidget: Container(
+              nameWidget: SizedBox(
                 width: widget.labelWidth ??
                     CardSettings.of(context)?.labelWidth ??
                     120.0,
                 child: widget.requiredIndicator != null
                     ? Text(
-                        (widget.label) + ' *',
+                        '${widget.label} *',
                         style: ls,
                       )
                     : Text(
@@ -169,8 +171,8 @@ class _CardSettingsSliderState extends FormFieldState<double> {
       content: Row(children: <Widget>[
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(0.0),
-            child: Container(
+            padding: const EdgeInsets.all(0.0),
+            child: SizedBox(
               height: 20.0,
               child: SliderTheme(
                 data: SliderThemeData(
@@ -187,8 +189,9 @@ class _CardSettingsSliderState extends FormFieldState<double> {
                   onChanged: (widget.enabled)
                       ? (value) {
                           didChange(value);
-                          if (widget.onChanged != null)
+                          if (widget.onChanged != null) {
                             widget.onChanged!(value);
+                          }
                         }
                       : null, // to disable, we need to not provide an onChanged function
                 ),

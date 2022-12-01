@@ -1,36 +1,37 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:intl/intl.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a currency field.
 class CardSettingsCurrency extends StatefulWidget
     implements ICommonFieldProperties {
-  CardSettingsCurrency({
-    Key? key,
-    this.label: 'Label',
+  const CardSettingsCurrency({
+    super.key,
+    this.label = 'Label',
     this.labelAlign,
     this.labelWidth,
     this.contentAlign,
-    this.initialValue: 0.0,
+    this.initialValue = 0.0,
     this.icon,
     this.requiredIndicator,
-    this.currencySymbol: '\$',
-    this.currencyName: 'USD',
-    this.decimalSeparator: '.',
-    this.thousandSeparator: ',',
-    this.maxLength: 16,
-    this.visible: true,
-    this.enabled: true,
-    this.autofocus: false,
-    this.obscureText: false,
-    this.autovalidateMode: AutovalidateMode.onUserInteraction,
+    this.currencySymbol = '\$',
+    this.currencyName = 'USD',
+    this.decimalSeparator = '.',
+    this.thousandSeparator = ',',
+    this.maxLength = 16,
+    this.visible = true,
+    this.enabled = true,
+    this.autofocus = false,
+    this.obscureText = false,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.validator,
     this.onSaved,
     this.onChanged,
@@ -40,7 +41,7 @@ class CardSettingsCurrency extends StatefulWidget
     this.inputActionNode,
     this.keyboardType,
     this.style,
-    this.maxLengthEnforcement: MaxLengthEnforcement.enforced,
+    this.maxLengthEnforcement = MaxLengthEnforcement.enforced,
     this.onFieldSubmitted,
     this.inputFormatters,
     this.showMaterialonIOS,
@@ -165,7 +166,7 @@ class _CardSettingsCurrencyState extends State<CardSettingsCurrency> {
   Widget build(BuildContext context) {
     Locale myLocale = widget.locale ?? Localizations.localeOf(context);
 
-    var pattern = "#,###.##";
+    var pattern = '#,###.##';
 
     var formatter = NumberFormat(pattern, myLocale.languageCode);
 
@@ -195,7 +196,7 @@ class _CardSettingsCurrencyState extends State<CardSettingsCurrency> {
       inputAction: widget.inputAction,
       inputActionNode: widget.inputActionNode,
       keyboardType: widget.keyboardType ??
-          TextInputType.numberWithOptions(decimal: false),
+          const TextInputType.numberWithOptions(decimal: false),
       style: widget.style,
       maxLengthEnforcement: widget.maxLengthEnforcement,
       onFieldSubmitted: widget.onFieldSubmitted,
@@ -205,13 +206,13 @@ class _CardSettingsCurrencyState extends State<CardSettingsCurrency> {
 
   String? _safeValidator(String? value, NumberFormat formatter) {
     if (widget.validator == null) return null;
-    num? number = (value == "") ? null : formatter.parse(value!);
+    num? number = (value == '') ? null : formatter.parse(value!);
     return widget.validator!(intelligentCast<double>(number));
   }
 
   void _safeOnSaved(String? value, NumberFormat formatter) {
     if (widget.onSaved == null) return;
-    num? number = (value == "") ? null : formatter.parse(value!);
+    num? number = (value == '') ? null : formatter.parse(value!);
     widget.onSaved!(intelligentCast<double>(number));
   }
 
@@ -221,7 +222,7 @@ class _CardSettingsCurrencyState extends State<CardSettingsCurrency> {
     if (_moneyController != null) {
       widget.onChanged!(_moneyController!.numberValue);
     } else {
-      num? number = (value == "") ? null : formatter.parse(value!);
+      num? number = (value == '') ? null : formatter.parse(value!);
       widget.onChanged!(intelligentCast<double>(number));
     }
   }

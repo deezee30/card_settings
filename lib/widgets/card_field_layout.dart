@@ -1,16 +1,19 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
+
+import 'package:flutter/material.dart';
 
 import 'package:card_settings/widgets/card_settings_widget.dart';
-import 'package:flutter/material.dart';
 
 /// Lays out multiple fields in a row
 class CardFieldLayout extends StatelessWidget implements CardSettingsWidget {
-  CardFieldLayout(
+  const CardFieldLayout(
     this.children, {
     this.flexValues,
-    this.visible: true,
-    this.showMaterialonIOS: false,
+    this.visible = true,
+    this.showMaterialonIOS = false,
+    super.key,
   });
 
   /// the field widgets to place into the layout
@@ -36,8 +39,8 @@ class CardFieldLayout extends StatelessWidget implements CardSettingsWidget {
     return Row(
       children: children
           .map((c) => Flexible(
-                child: c,
                 flex: (flexValues == null) ? 1 : (flexValues?[iterator++] ?? 1),
+                child: c,
               ))
           .toList(),
     );

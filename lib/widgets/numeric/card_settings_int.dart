@@ -1,33 +1,34 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a password field. It obscures the entered text.
 class CardSettingsInt extends CardSettingsText
     implements ICommonFieldProperties {
   CardSettingsInt({
     Key? key,
-    String label: 'Label',
+    String label = 'Label',
     TextAlign? labelAlign,
     double? labelWidth,
     TextAlign? contentAlign,
     String? hintText,
-    int initialValue: 0,
+    int initialValue = 0,
     Icon? icon,
     Widget? requiredIndicator,
     String? unitLabel,
-    int maxLength: 10,
-    bool visible: true,
-    bool enabled: true,
-    bool autofocus: false,
-    bool obscureText: false,
-    bool autocorrect: false,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    int maxLength = 10,
+    bool visible = true,
+    bool enabled = true,
+    bool autofocus = false,
+    bool obscureText = false,
+    bool autocorrect = false,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     FormFieldValidator<int>? validator,
     FormFieldSetter<int>? onSaved,
     ValueChanged<int?>? onChanged,
@@ -37,7 +38,7 @@ class CardSettingsInt extends CardSettingsText
     FocusNode? inputActionNode,
     TextInputType? keyboardType,
     TextStyle? style,
-    MaxLengthEnforcement? maxLengthEnforcement: MaxLengthEnforcement.enforced,
+    MaxLengthEnforcement? maxLengthEnforcement = MaxLengthEnforcement.enforced,
     ValueChanged<String>? onFieldSubmitted,
     List<TextInputFormatter>? inputFormatters,
     bool? showMaterialonIOS,
@@ -78,14 +79,14 @@ class CardSettingsInt extends CardSettingsText
           focusNode: focusNode,
           inputAction: inputAction,
           inputActionNode: inputActionNode,
-          keyboardType:
-              keyboardType ?? TextInputType.numberWithOptions(decimal: false),
+          keyboardType: keyboardType ??
+              const TextInputType.numberWithOptions(decimal: false),
           style: style,
           maxLengthEnforcement: maxLengthEnforcement,
           onFieldSubmitted: onFieldSubmitted,
           inputFormatters: [
             LengthLimitingTextInputFormatter(maxLength),
-            FilteringTextInputFormatter.allow(RegExp("[0-9]+")),
+            FilteringTextInputFormatter.allow(RegExp('[0-9]+')),
           ],
         );
 }

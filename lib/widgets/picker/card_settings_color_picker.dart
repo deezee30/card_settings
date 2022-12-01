@@ -1,13 +1,14 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This allows selection of which variant of the color picker you would like to use
 enum CardSettingsColorPickerType { colors, material, block }
@@ -21,7 +22,7 @@ class CardSettingsColorPicker extends FormField<Color>
     FormFieldSetter<Color>? onSaved,
     FormFieldValidator<Color>? validator,
     Color initialValue = Colors.green,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     this.enabled = true,
     this.onChanged,
     this.visible = true,
@@ -31,7 +32,7 @@ class CardSettingsColorPicker extends FormField<Color>
     this.labelWidth,
     this.pickerType = CardSettingsColorPickerType.colors,
     this.requiredIndicator,
-    this.label = "Label",
+    this.label = 'Label',
     this.showMaterialonIOS,
     this.fieldPadding,
   }) : super(
@@ -158,10 +159,11 @@ class _CardSettingsColorPickerState extends FormFieldState<Color> {
   }
 
   Widget _build(BuildContext context) {
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsColorPicker();
-    else
+    } else {
       return _materialSettingsColorPicker();
+    }
   }
 
   Widget _cupertinoSettingsColorPicker() {
@@ -174,13 +176,13 @@ class _CardSettingsColorPickerState extends FormFieldState<Color> {
                 if (widget.enabled) _showDialog();
               },
               child: CSControl(
-                nameWidget: Container(
+                nameWidget: SizedBox(
                   width: widget.labelWidth ??
                       CardSettings.of(context)?.labelWidth ??
                       120.0,
                   child: widget.requiredIndicator != null
                       ? Text(
-                          (widget.label) + ' *',
+                          '${widget.label} *',
                           style: ls,
                         )
                       : Text(

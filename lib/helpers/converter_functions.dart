@@ -1,5 +1,6 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ bool boolParse(String? value) {
 Color colorParse(dynamic value) {
   // input is string (e.g. 'FF112233') convert to integer
   if (value is String) {
-    if (value.toString().length == 6) value = 'FF' + value.toString();
+    if (value.toString().length == 6) value = 'FF$value';
     value = int.parse(value.toString(), radix: 16);
   }
 

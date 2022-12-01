@@ -1,18 +1,19 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import '../card_settings_panel.dart';
-import '../card_settings_widget.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
 
 /// This is a read only section of text
 class CardSettingsInstructions extends StatelessWidget
     implements CardSettingsWidget {
-  CardSettingsInstructions({
-    this.text: 'Instructions here...',
+  const CardSettingsInstructions({
+    super.key,
+    this.text = 'Instructions here...',
     this.backgroundColor,
     this.textColor,
     this.showMaterialonIOS,
@@ -50,27 +51,28 @@ class CardSettingsInstructions extends StatelessWidget
         .copyWith(color: textColor ?? Theme.of(context).colorScheme.secondary);
     if (showCupertino(context, showMaterialonIOS)) {
       return Container(
-        padding: EdgeInsets.only(top: 8.0, left: 8.0),
+        padding: const EdgeInsets.only(top: 8.0, left: 8.0),
         child: Text(
           text,
-          style: TextStyle(color: CupertinoColors.inactiveGray),
+          style: const TextStyle(color: CupertinoColors.inactiveGray),
         ),
         // color: CupertinoColors.lightBackgroundGray,
       );
-    } else
+    } else {
       return _materialInstruction(context, textStyle);
+    }
   }
 
   Widget _materialInstruction(BuildContext context, TextStyle textStyle) {
-    EdgeInsetsGeometry _fieldPadding = (fieldPadding ??
+    EdgeInsetsGeometry fieldPadding_ = (fieldPadding ??
         CardSettings.of(context)?.fieldPadding ??
-        EdgeInsets.all(14.0));
+        const EdgeInsets.all(14.0));
 
     return Container(
-      margin: EdgeInsets.all(0.0),
+      margin: const EdgeInsets.all(0.0),
       decoration:
           BoxDecoration(color: backgroundColor ?? Theme.of(context).cardColor),
-      padding: _fieldPadding,
+      padding: fieldPadding_,
       child: Row(
         children: <Widget>[
           Text(

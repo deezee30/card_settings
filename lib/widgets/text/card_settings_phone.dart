@@ -1,20 +1,21 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
-import '../../interfaces/text_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
+import 'package:card_settings/interfaces/text_field_properties.dart';
 
 /// This is a phone number field. It's designed for US numbers
 class CardSettingsPhone extends StatelessWidget
     implements ICommonFieldProperties, ITextFieldProperties {
-  CardSettingsPhone({
-    Key? key,
-    this.label: 'Phone',
+  const CardSettingsPhone({
+    super.key,
+    this.label = 'Phone',
     this.labelWidth,
     this.labelAlign,
     this.hintText,
@@ -25,12 +26,12 @@ class CardSettingsPhone extends StatelessWidget
     this.maxLength = 20,
     this.icon,
     this.requiredIndicator,
-    this.visible: true,
-    this.enabled: true,
-    this.autofocus: false,
-    this.obscureText: false,
-    this.autocorrect: false,
-    this.autovalidateMode: AutovalidateMode.onUserInteraction,
+    this.visible = true,
+    this.enabled = true,
+    this.autofocus = false,
+    this.obscureText = false,
+    this.autocorrect = false,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.validator,
     this.onSaved,
     this.onChanged,
@@ -40,7 +41,7 @@ class CardSettingsPhone extends StatelessWidget
     this.inputActionNode,
     this.keyboardType,
     this.style,
-    this.maxLengthEnforcement: MaxLengthEnforcement.enforced,
+    this.maxLengthEnforcement = MaxLengthEnforcement.enforced,
     this.onFieldSubmitted,
     this.inputFormatters,
     this.showMaterialonIOS,
@@ -144,7 +145,7 @@ class CardSettingsPhone extends StatelessWidget
       contentAlign: contentAlign,
       initialValue: initialValue != null
           ? formatAsPhoneNumber(initialValue.toString())
-          : "",
+          : '',
       contentOnNewLine: contentOnNewLine,
       maxLength: maxLength,
       hintText: hintText,
@@ -166,7 +167,7 @@ class CardSettingsPhone extends StatelessWidget
       fieldPadding: fieldPadding,
       inputActionNode: inputActionNode,
       keyboardType:
-          keyboardType ?? TextInputType.numberWithOptions(decimal: false),
+          keyboardType ?? const TextInputType.numberWithOptions(decimal: false),
       style: style,
       maxLengthEnforcement: maxLengthEnforcement,
       onFieldSubmitted: onFieldSubmitted,

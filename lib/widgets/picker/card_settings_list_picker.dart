@@ -1,25 +1,25 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a list picker that allows an arbitrary list of options to be provided.
-class CardSettingsRadioPicker<T> extends FormField<T>
+class CardSettingsListPicker<T> extends FormField<T>
     implements ICommonFieldProperties {
-  CardSettingsRadioPicker({
+  CardSettingsListPicker({
     Key? key,
     T? initialItem,
-    FormFieldSetter<T>? onSaved,
-    FormFieldValidator<T>? validator,
-    // bool autovalidate: false,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    FormFieldSetter<T?>? onSaved,
+    FormFieldValidator<T?>? validator,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     this.enabled = true,
     this.label = 'Label',
     this.visible = true,
@@ -38,18 +38,21 @@ class CardSettingsRadioPicker<T> extends FormField<T>
             initialValue: initialItem ?? null,
             onSaved: onSaved,
             validator: validator,
-            // autovalidate: autovalidate,
             autovalidateMode: autovalidateMode,
             builder: (FormFieldState<T> field) =>
-                (field as _CardSettingsRadioPickerState)._build(field.context));
+                (field as _CardSettingsListPickerState)._build(field.context));
 
-  /// fires when the selection changes
+  /// fires when the picker value is changed
   @override
-  final ValueChanged<T>? onChanged;
+  final ValueChanged<T?>? onChanged;
 
   /// The text to identify the field to the user
   @override
   final String label;
+
+  /// If false the field is grayed out and unresponsive
+  @override
+  final bool enabled;
 
   /// The alignment of the label paret of the field. Default is left.
   @override
@@ -70,15 +73,11 @@ class CardSettingsRadioPicker<T> extends FormField<T>
   @override
   final Icon? icon;
 
-  /// If false the field is grayed out and unresponsive
-  @override
-  final bool enabled;
-
   /// A widget to show next to the label if the field is required
   @override
   final Widget? requiredIndicator;
 
-  /// a list of options to show on the picker
+  /// a list of items for the picker
   final List<T> items;
 
   /// If false hides the widget on the card setting panel
@@ -94,29 +93,29 @@ class CardSettingsRadioPicker<T> extends FormField<T>
   final EdgeInsetsGeometry? fieldPadding;
 
   @override
-  _CardSettingsRadioPickerState<T> createState() =>
-      _CardSettingsRadioPickerState<T>();
+  _CardSettingsListPickerState<T> createState() =>
+      _CardSettingsListPickerState<T>();
 }
 
-class _CardSettingsRadioPickerState<T> extends FormFieldState<T> {
+class _CardSettingsListPickerState<T> extends FormFieldState<T> {
   @override
-  CardSettingsRadioPicker<T> get widget =>
-      super.widget as CardSettingsRadioPicker<T>;
+  CardSettingsListPicker<T> get widget =>
+      super.widget as CardSettingsListPicker<T>;
 
   List<T> items = List<T>.empty();
 
   void _showDialog(String label) {
     if (showCupertino(context, widget.showMaterialonIOS)) {
-      int valueIndex = items.indexOf(value!);
-      _showCupertinoBottomPicker(valueIndex);
+      int itemIndex = items.indexOf(value as T);
+      _showCupertinoBottomPicker(itemIndex);
     } else {
-      _showMaterialRadioPicker(label, value);
+      _showMaterialScrollPicker(label, value);
     }
   }
 
-  void _showCupertinoBottomPicker(int valueIndex) {
+  void _showCupertinoBottomPicker(int optionIndex) {
     final FixedExtentScrollController scrollController =
-        FixedExtentScrollController(initialItem: valueIndex);
+        FixedExtentScrollController(initialItem: optionIndex);
     showCupertinoModalPopup<T>(
       context: context,
       builder: (BuildContext context) {
@@ -145,8 +144,8 @@ class _CardSettingsRadioPickerState<T> extends FormFieldState<T> {
     });
   }
 
-  void _showMaterialRadioPicker(String label, T? selectedItem) {
-    showMaterialRadioPicker<T>(
+  void _showMaterialScrollPicker(String label, T? selectedItem) {
+    showMaterialScrollPicker<T?>(
       context: context,
       title: label,
       items: items,
@@ -187,16 +186,17 @@ class _CardSettingsRadioPickerState<T> extends FormFieldState<T> {
     // get the content label from options based on value
     String content = widget.hintText ?? '';
     if (value != null) {
-      int itemIndex = items.indexOf(value!);
+      int? itemIndex = items.indexOf(value as T);
       if (itemIndex >= 0) {
         content = items[itemIndex].toString();
       }
     }
 
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsListPicker(content);
-    else
+    } else {
       return _materialSettingsListPicker(content);
+    }
   }
 
   Widget _cupertinoSettingsListPicker(String content) {
@@ -209,13 +209,13 @@ class _CardSettingsRadioPickerState<T> extends FormFieldState<T> {
                 if (widget.enabled) _showDialog(widget.label);
               },
               child: CSControl(
-                nameWidget: Container(
+                nameWidget: SizedBox(
                   width: widget.labelWidth ??
                       CardSettings.of(context)?.labelWidth ??
                       120.0,
                   child: widget.requiredIndicator != null
                       ? Text(
-                          (widget.label) + ' *',
+                          '${widget.label} *',
                           style: ls,
                         )
                       : Text(
@@ -242,9 +242,9 @@ class _CardSettingsRadioPickerState<T> extends FormFieldState<T> {
       },
       child: CardSettingsField(
         label: widget.label,
+        enabled: widget.enabled,
         labelAlign: widget.labelAlign,
         labelWidth: widget.labelWidth,
-        enabled: widget.enabled,
         visible: widget.visible,
         icon: widget.icon,
         requiredIndicator: widget.requiredIndicator,

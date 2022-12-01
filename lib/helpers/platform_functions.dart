@@ -1,7 +1,13 @@
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
+
 import 'dart:io';
-import 'package:card_settings/widgets/card_settings_panel.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:card_settings/widgets/card_settings_panel.dart';
 
 /// this centralizes code to determine if we want to display the cupertino
 /// version or the material version, since this can be determined by
@@ -22,10 +28,10 @@ bool showCupertino(
     if (showMaterialonIOS == null) {
       showMaterialonIOS = defaultValue;
 
-      if (context != null)
-        // set showMaterialOnIOS to parent CardSettings value
+      if (context != null) {
         showMaterialonIOS =
             CardSettings.of(context)?.showMaterialonIOS ?? defaultValue;
+      }
     }
 
     return !showMaterialonIOS;

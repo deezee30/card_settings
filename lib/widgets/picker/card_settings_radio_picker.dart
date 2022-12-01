@@ -1,25 +1,26 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a list picker that allows an arbitrary list of options to be provided.
-class CardSettingsSelectionPicker<T> extends FormField<T>
+class CardSettingsRadioPicker<T> extends FormField<T>
     implements ICommonFieldProperties {
-  CardSettingsSelectionPicker({
+  CardSettingsRadioPicker({
     Key? key,
     T? initialItem,
     FormFieldSetter<T>? onSaved,
     FormFieldValidator<T>? validator,
     // bool autovalidate: false,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     this.enabled = true,
     this.label = 'Label',
     this.visible = true,
@@ -33,18 +34,17 @@ class CardSettingsSelectionPicker<T> extends FormField<T>
     required this.items,
     this.showMaterialonIOS,
     this.fieldPadding,
-    this.iconizer,
   }) : super(
             key: key,
-            initialValue: initialItem ?? null,
+            initialValue: initialItem,
             onSaved: onSaved,
             validator: validator,
             // autovalidate: autovalidate,
             autovalidateMode: autovalidateMode,
             builder: (FormFieldState<T> field) =>
-                (field as _CardSettingsListPickerState)._build(field.context));
+                (field as _CardSettingsRadioPickerState)._build(field.context));
 
-  /// fires when the section is changed
+  /// fires when the selection changes
   @override
   final ValueChanged<T>? onChanged;
 
@@ -56,20 +56,20 @@ class CardSettingsSelectionPicker<T> extends FormField<T>
   @override
   final TextAlign? labelAlign;
 
+  /// The width of the field label. If provided overrides the global setting.
+  @override
+  final double? labelWidth;
+
   /// controls how the widget in the content area of the field is aligned
   @override
   final TextAlign? contentAlign;
 
-  /// displayes hint text on the selection form.
+  /// text to display to guide the user on what to enter
   final String? hintText;
 
   /// The icon to display to the left of the field content
   @override
   final Icon? icon;
-
-  /// The width of the field label. If provided overrides the global setting.
-  @override
-  final double? labelWidth;
 
   /// If false the field is grayed out and unresponsive
   @override
@@ -79,11 +79,8 @@ class CardSettingsSelectionPicker<T> extends FormField<T>
   @override
   final Widget? requiredIndicator;
 
-  /// a list of items to provide on the selection picker
+  /// a list of options to show on the picker
   final List<T> items;
-
-  /// the function that will extract the icon from the items model
-  final Iconizer<T?>? iconizer;
 
   /// If false hides the widget on the card setting panel
   @override
@@ -98,23 +95,23 @@ class CardSettingsSelectionPicker<T> extends FormField<T>
   final EdgeInsetsGeometry? fieldPadding;
 
   @override
-  _CardSettingsListPickerState<T> createState() =>
-      _CardSettingsListPickerState<T>();
+  _CardSettingsRadioPickerState<T> createState() =>
+      _CardSettingsRadioPickerState<T>();
 }
 
-class _CardSettingsListPickerState<T> extends FormFieldState<T> {
+class _CardSettingsRadioPickerState<T> extends FormFieldState<T> {
   @override
-  CardSettingsSelectionPicker<T> get widget =>
-      super.widget as CardSettingsSelectionPicker<T>;
+  CardSettingsRadioPicker<T> get widget =>
+      super.widget as CardSettingsRadioPicker<T>;
 
   List<T> items = List<T>.empty();
 
   void _showDialog(String label) {
     if (showCupertino(context, widget.showMaterialonIOS)) {
-      int itemIndex = items.indexOf(value!);
-      _showCupertinoBottomPicker(itemIndex);
+      int valueIndex = items.indexOf(value as T);
+      _showCupertinoBottomPicker(valueIndex);
     } else {
-      _showMaterialSelectionPicker(label, value!);
+      _showMaterialRadioPicker(label, value);
     }
   }
 
@@ -149,13 +146,12 @@ class _CardSettingsListPickerState<T> extends FormFieldState<T> {
     });
   }
 
-  void _showMaterialSelectionPicker(String label, T selectedItem) {
-    showMaterialSelectionPicker<T>(
+  void _showMaterialRadioPicker(String label, T? selectedItem) {
+    showMaterialRadioPicker<T>(
       context: context,
       title: label,
       items: items,
       selectedItem: selectedItem,
-      iconizer: widget.iconizer,
       onChanged: (value) {
         didChange(value);
         if (widget.onChanged != null) widget.onChanged!(value);
@@ -190,16 +186,19 @@ class _CardSettingsListPickerState<T> extends FormFieldState<T> {
     items = widget.items;
 
     // get the content label from options based on value
-    int itemIndex = items.indexOf(value!);
     String content = widget.hintText ?? '';
-    if (itemIndex >= 0) {
-      content = items[itemIndex].toString();
+    if (value != null) {
+      int itemIndex = items.indexOf(value as T);
+      if (itemIndex >= 0) {
+        content = items[itemIndex].toString();
+      }
     }
 
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsListPicker(content);
-    else
+    } else {
       return _materialSettingsListPicker(content);
+    }
   }
 
   Widget _cupertinoSettingsListPicker(String content) {
@@ -209,16 +208,16 @@ class _CardSettingsListPickerState<T> extends FormFieldState<T> {
           ? null
           : GestureDetector(
               onTap: () {
-                _showDialog(widget.label);
+                if (widget.enabled) _showDialog(widget.label);
               },
               child: CSControl(
-                nameWidget: Container(
+                nameWidget: SizedBox(
                   width: widget.labelWidth ??
                       CardSettings.of(context)?.labelWidth ??
                       120.0,
                   child: widget.requiredIndicator != null
                       ? Text(
-                          (widget.label) + ' *',
+                          '${widget.label} *',
                           style: ls,
                         )
                       : Text(
@@ -228,10 +227,7 @@ class _CardSettingsListPickerState<T> extends FormFieldState<T> {
                 ),
                 contentWidget: Text(
                   content,
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: (value == null)
-                          ? Theme.of(context).hintColor
-                          : Theme.of(context).textTheme.subtitle1?.color),
+                  style: contentStyle(context, value, widget.enabled),
                   textAlign: widget.contentAlign ??
                       CardSettings.of(context)?.contentAlign,
                 ),
@@ -242,12 +238,6 @@ class _CardSettingsListPickerState<T> extends FormFieldState<T> {
   }
 
   Widget _materialSettingsListPicker(String content) {
-    var style = Theme.of(context).textTheme.subtitle1?.copyWith(
-        color: (value == null)
-            ? Theme.of(context).hintColor
-            : Theme.of(context).textTheme.subtitle1?.color);
-    if (!widget.enabled) style = style?.copyWith(color: Colors.grey);
-
     return GestureDetector(
       onTap: () {
         if (widget.enabled) _showDialog(widget.label);
@@ -264,7 +254,7 @@ class _CardSettingsListPickerState<T> extends FormFieldState<T> {
         fieldPadding: widget.fieldPadding,
         content: Text(
           content,
-          style: style,
+          style: contentStyle(context, value, widget.enabled),
           textAlign:
               widget.contentAlign ?? CardSettings.of(context)?.contentAlign,
         ),

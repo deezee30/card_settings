@@ -1,22 +1,22 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
-
-import '../../interfaces/text_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
+import 'package:card_settings/interfaces/text_field_properties.dart';
 
 /// This is a phone number field. It's designed for US numbers
 class CardSettingsDouble extends StatelessWidget
     implements ICommonFieldProperties, ITextFieldProperties {
-  CardSettingsDouble({
-    Key? key,
-    this.label: 'Label',
+  const CardSettingsDouble({
+    super.key,
+    this.label = 'Label',
     this.labelWidth,
     this.labelAlign,
     this.hintText,
@@ -29,11 +29,11 @@ class CardSettingsDouble extends StatelessWidget
     this.icon,
     this.requiredIndicator,
     this.unitLabel,
-    this.visible: true,
-    this.enabled: true,
-    this.autofocus: false,
-    this.obscureText: false,
-    this.autovalidateMode: AutovalidateMode.onUserInteraction,
+    this.visible = true,
+    this.enabled = true,
+    this.autofocus = false,
+    this.obscureText = false,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.validator,
     this.onSaved,
     this.onChanged,
@@ -43,7 +43,7 @@ class CardSettingsDouble extends StatelessWidget
     this.inputActionNode,
     this.keyboardType,
     this.style,
-    this.maxLengthEnforcement: MaxLengthEnforcement.enforced,
+    this.maxLengthEnforcement = MaxLengthEnforcement.enforced,
     this.onFieldSubmitted,
     this.inputFormatters,
     this.showMaterialonIOS,
@@ -166,8 +166,11 @@ class CardSettingsDouble extends StatelessWidget
   Widget build(BuildContext context) {
     var myLocale = locale ?? Localizations.localeOf(context);
 
-    var pattern = "#,###" +
-        ((decimalDigits > 0) ? ".".padRight(decimalDigits + 1, "#") : "");
+    String format = '';
+    if (decimalDigits > 0) {
+      format = '.'.padRight(decimalDigits + 1, '#');
+    }
+    var pattern = '#,###$format';
 
     var formatter = NumberFormat(pattern, myLocale.languageCode);
 
@@ -201,7 +204,7 @@ class CardSettingsDouble extends StatelessWidget
       inputAction: inputAction,
       inputActionNode: inputActionNode,
       keyboardType:
-          keyboardType ?? TextInputType.numberWithOptions(decimal: true),
+          keyboardType ?? const TextInputType.numberWithOptions(decimal: true),
       style: style,
       maxLengthEnforcement: maxLengthEnforcement,
       onFieldSubmitted: onFieldSubmitted,
@@ -215,19 +218,19 @@ class CardSettingsDouble extends StatelessWidget
 
   String? _safeValidator(String? value, NumberFormat formatter) {
     if (validator == null) return null;
-    num? number = (value == "") ? null : formatter.parse(value!);
+    num? number = (value == '') ? null : formatter.parse(value!);
     return validator!(intelligentCast<double>(number));
   }
 
   void _safeOnSaved(String? value, NumberFormat formatter) {
     if (onSaved == null) return;
-    num? number = (value == "") ? null : formatter.parse(value!);
+    num? number = (value == '') ? null : formatter.parse(value!);
     onSaved!(intelligentCast<double>(number));
   }
 
   void _safeOnChanged(String? value, NumberFormat formatter) {
     if (onChanged == null) return;
-    num? number = (value == "") ? null : formatter.parse(value!);
+    num? number = (value == '') ? null : formatter.parse(value!);
     onChanged!(intelligentCast<double>(number));
   }
 }

@@ -1,23 +1,25 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 
-import '../../interfaces/minimum_field_properties.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/minimum_field_properties.dart';
 
 /// This is a button widget for inclusion in the form.
 class CardSettingsButton extends StatelessWidget
     implements IMinimumFieldSettings {
-  CardSettingsButton({
-    this.label: 'Label',
+  const CardSettingsButton({
+    super.key,
+    this.label = 'Label',
     required this.onPressed,
-    this.visible: true,
+    this.visible = true,
     this.backgroundColor,
     this.textColor,
     this.enabled = true,
-    this.bottomSpacing: 0.0,
+    this.bottomSpacing = 0.0,
     this.isDestructive = false,
     this.showMaterialonIOS,
   });
@@ -57,33 +59,38 @@ class CardSettingsButton extends StatelessWidget
         Theme.of(context).textTheme.button!.copyWith(color: textColor);
 
     if (visible) {
-      if (showCupertino(context, showMaterialonIOS))
+      if (showCupertino(context, showMaterialonIOS)) {
         return _showCuppertinoButton();
-      else
+      } else {
         return _showMaterialButton(context, buttonStyle);
+      }
     } else {
       return Container();
     }
   }
 
   Widget _showMaterialButton(BuildContext context, TextStyle buttonStyle) {
-    var style = Theme.of(context).textButtonTheme.style ?? ButtonStyle();
-    if (backgroundColor != null)
+    var style = Theme.of(context).textButtonTheme.style ?? const ButtonStyle();
+    if (backgroundColor != null) {
       style = style.copyWith(
           backgroundColor: MaterialStateProperty.all<Color>(backgroundColor!));
-    if (textColor != null)
+    }
+    if (textColor != null) {
       style = style.copyWith(
           foregroundColor: MaterialStateProperty.all<Color>(textColor!));
-    if (!enabled)
+    }
+    if (!enabled) {
       style = style.copyWith(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.grey));
+    }
 
     return Container(
       margin: EdgeInsets.only(
           top: 0.0, bottom: bottomSpacing, left: 6.0, right: 6.0),
-      padding: EdgeInsets.all(0.0),
+      padding: const EdgeInsets.all(0.0),
       child: TextButton(
         style: style,
+        onPressed: (enabled) ? onPressed : null,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -91,10 +98,7 @@ class CardSettingsButton extends StatelessWidget
               label,
             ),
           ],
-        ),
-        onPressed: (enabled)
-            ? onPressed
-            : null, // to disable, we need to not provide an onPressed function
+        ), // to disable, we need to not provide an onPressed function
       ),
     );
   }

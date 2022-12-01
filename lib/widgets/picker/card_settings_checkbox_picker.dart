@@ -1,14 +1,15 @@
-// Copyright (c) 2018, codegrue. All rights reserved. Use of this source code
-// is governed by the MIT license that can be found in the LICENSE file.
+// Originally taken from codegrue, modified by AnimaSelf
+// Source: https://github.com/codegrue/card_settings
+// Original version: 3.3.0: 0de143e9e9286e65cb3a4de61eb0af971a76f671
 
-import 'package:card_settings/helpers/platform_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_settings/flutter_cupertino_settings.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
-import '../../card_settings.dart';
-import '../../interfaces/common_field_properties.dart';
+import 'package:card_settings/card_settings.dart';
+import 'package:card_settings/helpers/platform_functions.dart';
+import 'package:card_settings/interfaces/common_field_properties.dart';
 
 /// This is a selection widget that allows an arbitrary list of options to be provided.
 class CardSettingsCheckboxPicker<T> extends FormField<List<T>>
@@ -18,7 +19,7 @@ class CardSettingsCheckboxPicker<T> extends FormField<List<T>>
     List<T>? initialItems,
     FormFieldSetter<List<T>>? onSaved,
     FormFieldValidator<List<T>>? validator,
-    AutovalidateMode autovalidateMode: AutovalidateMode.onUserInteraction,
+    AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction,
     this.enabled = true,
     this.onChanged,
     this.label = 'Select',
@@ -101,10 +102,11 @@ class _CardSettingsCheckboxPickerState<T> extends FormFieldState<List<T>> {
   List<T> items = List<T>.empty();
 
   void _showDialog(String label) {
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       _showCupertinoSelectPicker(label);
-    else
+    } else {
       _showMaterialCheckboxPicker(label);
+    }
   }
 
   void _showMaterialCheckboxPicker(String label) {
@@ -145,10 +147,11 @@ class _CardSettingsCheckboxPickerState<T> extends FormFieldState<List<T>> {
     // make local mutable copies of values and options
     items = widget.items;
 
-    if (showCupertino(context, widget.showMaterialonIOS))
+    if (showCupertino(context, widget.showMaterialonIOS)) {
       return _cupertinoSettingsMultiselect();
-    else
+    } else {
       return _materialSettingsMultiselect();
+    }
   }
 
   Widget _cupertinoSettingsMultiselect() {
@@ -161,13 +164,13 @@ class _CardSettingsCheckboxPickerState<T> extends FormFieldState<List<T>> {
                 if (widget.enabled) _showDialog(widget.label);
               },
               child: CSControl(
-                nameWidget: Container(
+                nameWidget: SizedBox(
                   width: widget.labelWidth ??
                       CardSettings.of(context)?.labelWidth ??
                       120.0,
                   child: widget.requiredIndicator != null
                       ? Text(
-                          (widget.label) + ' *',
+                          '${widget.label} *',
                           style: ls,
                         )
                       : Text(
@@ -177,10 +180,10 @@ class _CardSettingsCheckboxPickerState<T> extends FormFieldState<List<T>> {
                 ),
                 contentWidget: Text(
                   value == null || value!.isEmpty
-                      ? "none selected"
+                      ? 'none selected'
                       : value!.length == 1
-                          ? "${value![0]}"
-                          : "${value![0]} & ${value!.length - 1} more",
+                          ? '${value![0]}'
+                          : '${value![0]} & ${value!.length - 1} more',
                   style: contentStyle(context, value, widget.enabled),
                 ),
                 style: CSWidgetStyle(icon: widget.icon),
@@ -224,7 +227,7 @@ class _CardSettingsCheckboxPickerState<T> extends FormFieldState<List<T>> {
 }
 
 class _CupertinoSelect<T> extends StatefulWidget {
-  _CupertinoSelect({
+  const _CupertinoSelect({
     required this.label,
     this.initialItems,
     required this.items,
@@ -262,9 +265,9 @@ class _CupertinoSelectState<T> extends State<_CupertinoSelect<T>> {
           // Material page. CupertinoPageRoutes could auto-populate these back
           // labels.
           previousPageTitle: 'Cupertino',
-          middle: Text('Select ' + widget.label),
+          middle: Text('Select ${widget.label}'),
           trailing: GestureDetector(
-            child: Text(
+            child: const Text(
               'Save',
               style: TextStyle(
                 color: CupertinoColors.activeBlue,
@@ -284,7 +287,7 @@ class _CupertinoSelectState<T> extends State<_CupertinoSelect<T>> {
             return ListTile(
               leading: select
                   ? const Icon(CupertinoIcons.check_mark)
-                  : Icon(Icons.info, color: Colors.transparent),
+                  : const Icon(Icons.info, color: Colors.transparent),
               title: Text(i.toString()),
               onTap: () {
                 setState(() {
